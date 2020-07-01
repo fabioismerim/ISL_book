@@ -26,33 +26,35 @@
 Before reading the data into R, it can be viewed in Excel or a text
 editor.
 
-<b>(a)</b> Use the read.csv() function to read the data into R. Call the
-loaded data college. Make sure that you have the directory set
-to the correct location for the data.
+  (a) Use the read.csv() function to read the data into R. Call the
+  loaded data college. Make sure that you have the directory set
+  to the correct location for the data.
 
-<b>(b)</b> Look at the data using the fix() function. You should notice
-that the first column is just the name of each university.We don’t
-really want R to treat this as data. However, it may be handy to
-have these names for later. Try the following commands:
+  (b) Look at the data using the fix() function. You should notice
+  that the first column is just the name of each university.We don’t
+  really want R to treat this as data. However, it may be handy to
+  have these names for later. Try the following commands:
 
-> rownames (college )=college [,1]
-> fix (college )
+  > rownames (college )=college [,1]
+  > fix (college )
 
-You should see that there is now a row.names column with the
-name of each university recorded. This means that R has given
-each row a name corresponding to the appropriate university. R
-will not try to perform calculations on the row names. However,
-we still need to eliminate the first column in the data where the
-names are stored. Try
-> college =college [,-1]
-> fix (college )
+  You should see that there is now a row.names column with the
+  name of each university recorded. This means that R has given
+  each row a name corresponding to the appropriate university. R
+  will not try to perform calculations on the row names. However,
+  we still need to eliminate the first column in the data where the
+  names are stored. Try
 
-Now you should see that the first data column is Private. Note
-that another column labeled row.names now appears before the
-Private column. However, this is not a data column but rather
-the name that R is giving to each row.
+  > college =college [,-1]
+  > fix (college )
 
-<b>(c)</b> 
+  Now you should see that the first data column is Private. Note
+  that another column labeled row.names now appears before the
+  Private column. However, this is not a data column but rather
+  the name that R is giving to each row.
+
+  (c) 
+  
   i. Use the summary() function to produce a numerical summary
   of the variables in the data set.
 
@@ -71,8 +73,11 @@ the name that R is giving to each row.
   classes exceeds 50%.
   
   > Elite =rep ("No",nrow(college ))
+  
   > Elite [college$Top10perc >50]=" Yes"
+  
   > Elite =as.factor (Elite)
+  
   > college =data.frame(college ,Elite)
 
   Use the summary() function to see how many elite universities
