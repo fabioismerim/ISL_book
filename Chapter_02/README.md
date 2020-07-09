@@ -36,6 +36,7 @@ editor.
   have these names for later. Try the following commands:
 
   > rownames (college )=college [,1]
+  
   > fix (college )
 
   You should see that there is now a row.names column with the
