@@ -47,6 +47,7 @@ editor.
   names are stored. Try
 
   > college =college [,-1]
+  
   > fix (college )
 
   Now you should see that the first data column is Private. Note
