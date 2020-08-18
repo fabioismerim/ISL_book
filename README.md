@@ -9,4 +9,4 @@ The digital book is free and can be downloaded from the book's official website:
 
 ## <b> Dataset </b> 
 
-All datasets are saved in the </b>dataset</b> folder.
+All datasets are saved in the </b>DATASETS</b> folder.
