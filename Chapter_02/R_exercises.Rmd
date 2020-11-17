@@ -1,0 +1,280 @@
+---
+title: "Exercises_Chap_2"
+output:
+  pdf_document:
+    highlight: tango
+    toc: yes
+  html_notebook:
+    toc: yes
+  html_document:
+    toc: yes
+    df_print: paged
+---
+
+8.
+
+  (a) Use the read.csv() function to read the data into R. Call the
+  loaded data college. Make sure that you have the directory set
+  to the correct location for the data.
+
+```{r}
+college = read.csv(file = 'College.csv')
+```
+
+  (b) Look at the data using the fix() function.
+  
+```{r}
+fix(college)
+```
+  
+  ...You should notice that the first column is just the name of each university.
+  We don’t really want R to treat this as data. 
+  However, it may be handy to have these names for later. Try the following commands:
+```{r}
+rownames(college) = college[,1]
+fix(college)
+```
+  
+  ...You should see that there is now a row.names column with the
+  name of each university recorded. This means that R has given
+  each row a name corresponding to the appropriate university. R
+  will not try to perform calculations on the row names. However,
+  we still need to eliminate the first column in the data where the
+  names are stored.
+```{r}
+college = college[,-1]
+fix(college)
+```
+  ...Now you should see that the first data column is Private. Note
+  that another column labeled row.names now appears before the
+  Private column. However, this is not a data column but rather
+  the name that R is giving to each row.
+  
+  
+  (c) i. Use the summary() function to produce a numerical summary
+of the variables in the data set.
+```{r}
+summary(college)
+```
+
+  ii. Use the pairs() function to produce a scatterplot matrix of the first ten columns or variables of the data. Recall that you can reference the first ten columns of a matrix A using A[,1:10].
+```{r}
+pairs(college[,2:11], pch = 21)
+
+```
+  iii. Use the plot() function to produce side-by-side boxplots of Oustate versus Private
+```{r}
+boxplot(college$Outstate ~ college$Private, xlab = 'Outsate', ylab = 'Private', col = rainbow(2))
+
+```
+  iv. Create a new qualitative variable, called Elite, by binning the Top10perc variable. We are going to divide universities into two groups based on whether or not the proportion of students coming from the top 10% of their high school classes exceeds 50%.
+
+    Elite =rep ("No",nrow(college ))
+
+    Elite [college$Top10perc >50]=" Yes"
+
+    Elite =as.factor (Elite)
+
+    college =data.frame(college ,Elite)
+
+Use the summary() function to see how many elite universities there are. Now use the plot() function to produce side-by-side boxplots of Outstate versus Elite
+
+```{r}
+Elite = rep("No",nrow(college))
+
+Elite[college$Top10perc > 50] = "Yes"
+
+Elite = as.factor(Elite)
+
+college = data.frame(college ,Elite)
+
+summary(Elite)
+
+boxplot(college$Outstate ~ college$Elite, xlab = 'Outsate', ylab = 'Elite', col = rainbow(3))
+```
+  v. Use the hist() function to produce some histograms with differing numbers of bins for a few of the quantitative variables. You may find the command par(mfrow=c(2,2)) useful: it will divide the print window into four regions so that four plots can be made simultaneously. Modifying the arguments to this function will divide the screen in other ways.
+```{r}
+par(mfrow = c(2,2))
+hist(college$Apps, main = 'Number of applications received', xlab = 'Apps')
+hist(college$Accept, main = 'Number of applicants accepted', xlab = 'Accept')
+hist(college$F.Undergrad, main = 'Number of full-time undergraduates', xlab = 'Full time Underg.')
+hist(college$Outstate, main = 'Out-of-state tuition', xlab = 'Outsate')
+
+```
+
+9. This exercise involves the Auto data set studied in the lab. Make sure that the missing values have been removed from the data.
+  (a) Which of the predictors are quantitative, and which are qualitative?
+  
+```{r}
+#importing data
+
+auto = read.csv(file = 'Auto.csv')
+
+# checking for missing data:
+sum(is.na(auto))
+
+```
+```{r}
+#veriicando o tipo de dados:
+str(auto)
+```
+The `horsepower` column has missing values. Another problem is the data type: is string when should be numeric. We need change the values from `?` to null, remove it and change `horsepower` column data type to numeric.
+
+```{r}
+# change `?` to null:
+auto[auto == "?" ] <- NA
+
+# checkig missing values:
+sum(is.na(auto))
+```
+```{r}
+#drop missing values
+
+auto <- na.omit(auto)
+sum(is.na(auto))
+
+```
+
+```{r}
+# change data type to numeric:
+
+auto$horsepower = as.numeric(as.character(auto$horsepower))
+str(auto) #checking
+
+```
+
+
+```{r}
+# quantitative: mpg, cylinders, displacement, horsepower, weight, acceleration, year
+# qualitative: name, origin
+
+```
+
+
+  (b) What is the range of each quantitative predictor? You can answer this using the range() function. range()
+```{r}
+sapply(auto[, 1:7], range)
+```
+  
+  (c) What is the mean and standard deviation of each quantitative predictor?
+```{r}
+#mean:
+sapply(auto[,1:7], mean)
+
+```
+```{r}
+#standard deviation:
+sapply(auto[,1:7], sd)
+```
+  
+  (d) Now remove the 10th through 85th observations. What is the range, mean, and standard deviation of each predictor in the subset of the data that remains?
+  
+```{r}
+#removing the 10th through 85th obs:
+new_auto = auto[-(10:85),]
+dim(new_auto) #checking
+```
+```{r}
+#new mean:
+sapply(new_auto[,1:7], mean)
+```
+```{r}
+#new sd:
+sapply(new_auto[,1:7],sd)
+```
+  
+  (e) Using the full data set, investigate the predictors graphically, using scatterplots or other tools of your choice. Create some plots highlighting the relationships among the predictors. Comment on your findings.
+  
+```{r}
+pairs(auto[,1:7], main = "Auto Data",pch=21)
+
+plot(auto$mpg, auto$weight, ylab = "Weight", xlab = "MPG")
+# the mpg and weight has inverse correlation
+
+plot(auto$weight, auto$horsepower)
+#more weight, more horsepower
+
+```
+  
+
+  (f) Suppose that we wish to predict gas mileage (mpg) on the basis of the other variables. Do your plots suggest that any of the other variables might be useful in predicting mpg? Justify your answer.
+  
+ A: Yes. Almost quantitative variables have correlation with mpg (displacement, horsepower, weight and year, mainly)
+  
+  
+10. This exercise involves the Boston housing data set.
+
+  (a) To begin, load in the Boston data set. The Boston data set is part of the MASS library in R.
+
+```{r}
+library(MASS)
+```
+    
+
+  Now the data set is contained in the object Boston.
+
+    
+```{r}
+head(Boston)
+```
+
+  Read about the data set:
+
+```{r}
+?Boston
+dim(Boston)
+```
+    
+
+  How many rows are in this data set? How many columns? What do the rows and columns represent?
+
+  A: The Boston data frame has 506 rows and 14 columns. Rows represents the observations and columns represents the variables (or predictors, or features) about housing values in suburb.
+  
+
+  (b) Make some pairwise scatterplots of the predictors (columns) in this data set. Describe your findings.
+```{r}
+pairs(Boston, pch = 21)
+```
+crim correlates with: age, dis, rad, tax, ptratio
+zn correlates with: indus, nox, age, lstat
+indus: age, dis
+nox: age, dis
+dis: lstat
+lstat: medv
+
+  (c) Are any of the predictors associated with per capita crime rate? If so, explain the relationship.
+```{r}
+plot(Boston$age, Boston$crim)
+# Old houses(80 ~100 years old), more crime
+
+plot(Boston$dis, Boston$crim)
+#close to work centers, more crime
+
+plot(Boston$rad, Boston$crim)
+#higher index of accessibility, more crime
+
+plot(Boston$tax, Boston$crim)
+#Higher tax rate, more crime
+
+plot(Boston$ptratio, Boston$crim)
+#more pupil-teacher ratio, more crime
+```
+  
+
+  (d) Do any of the suburbs of Boston appear to have particularly high crime rates? Tax rates? Pupil-teacher ratios? Comment on the range of each predictor.
+```{r}
+par(mfrow=c(1,3))
+hist(Boston$crim[Boston$crim>1], breaks=25)
+# a maioria dos suburbios de Boston possuem baixa taxa de criminalidade
+
+```
+  
+
+  (e) How many of the suburbs in this data set bound the Charles river?
+
+  (f) What is the median pupil-teacher ratio among the towns in this data set?
+
+  (g) Which suburb of Boston has lowest median value of owneroccupied homes? What are the values of the other predictors for that suburb, and how do those values     compare to the overall ranges for those predictors? Comment on your findings.
+
+  (h) In this data set, how many of the suburbs average more than seven rooms per dwelling? More than eight rooms per dwelling? Comment on the suburbs that average    more than eight rooms per dwelling.
+  
